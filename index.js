@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let persons = [
     {
@@ -24,8 +27,47 @@ let persons = [
     }
 ]
 
+const generateId = () => {
+  return Math.floor(Math.random()*10**6)
+}
+
 app.get('/api/persons', (req, res) => {
   res.json(persons)
+})
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+
+  if (body === undefined) {
+    res.status(400).json({error: 'content missing'})
+    return
+  }
+
+  if (body.name === undefined ) {
+    res.status(400).json({error: 'name missing'})
+    return
+  }
+
+  if (body.number === undefined ) {
+    res.status(400).json({error: 'number missing'})
+    return
+  }
+
+  const name = body.name
+
+  if (persons.filter(p => p.name === name).length > 0) {
+    res.status(400).json({error: 'name must be unique'})
+    return
+  }
+
+  const p = {
+    name,
+    number: body.number,
+    id: generateId()
+  }
+
+  persons = persons.concat(p)
+  res.json(p)
 })
 
 app.get('/api/persons/:id', (req, res) => {
