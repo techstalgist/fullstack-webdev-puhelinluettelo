@@ -1,1 +1,1 @@
-[Linkki puhelinluettelon backendiin](https://enigmatic-eyrie-23236.herokuapp.com/)
+[Linkki puhelinluettelosovellukseen](https://enigmatic-eyrie-23236.herokuapp.com/)
