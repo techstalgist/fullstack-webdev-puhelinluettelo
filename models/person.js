@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
-const url = 'mongodb://heroku_4hgn9r4x:okv5sr7v6nlonf84ol2n293l3h@ds115583.mlab.com:15583/heroku_4hgn9r4x'
+if(process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
+const url = process.env.MONGODB_URI
 
 mongoose.connect(url);
 mongoose.Promise = global.Promise;
