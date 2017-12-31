@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 
 morgan.token('body', (req, res) => {
   return JSON.stringify(req.body)
@@ -9,6 +10,7 @@ morgan.token('body', (req, res) => {
 
 app.use(bodyParser.json())
 app.use(morgan(':method :url :body :status :res[content-length] - :response-time ms'))
+app.use(cors())
 
 let persons = [
     {
@@ -95,13 +97,22 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end()
 })
 
+app.put('/api/persons/:id', (req, res) => {
+  const p = req.body
+  const id = Number(req.params.id)
+
+  const nonChangedPersons = persons.filter(p => p.id !== id)
+  persons = nonChangedPersons.concat(p)
+  res.json(p)
+})
+
 app.get('/info', (req,res) => {
   res.send(
     `<div><p>puhelinluettelossa ${persons.length} henkilön tiedot</p><p>${new Date()}</p></div>`
   )
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
